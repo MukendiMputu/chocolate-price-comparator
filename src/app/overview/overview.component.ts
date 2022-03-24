@@ -26,14 +26,9 @@ export class OverviewComponent implements OnInit {
 
   public getAveragePrice(itemPrices: { price: number; shop: string; link: string; unit: string; amount: number; }[]) {
     let sum = 0.0;
-
     for (let itemPrice of itemPrices) {
-      if (itemPrice.unit == "kg") {
-        sum += itemPrice.price / (itemPrice.amount * 10);
-      }
-      sum += itemPrice.price / (itemPrice.amount / 100);
+      sum += itemPrice.price / (this.getPriceFactor(itemPrice.amount, itemPrice.unit));
     }
-
     return (sum / itemPrices.length).toFixed(2);
   }
 
@@ -51,12 +46,48 @@ export class OverviewComponent implements OnInit {
       }
       computedPrice = itemPrices[i].price * 100 / itemPrices[i].amount;
       if (computedPrice < minimumPrice) {
-          minimumPrice = computedPrice;
-          this.cheapestSupplier = itemPrices[i].shop;
-          this.cheapestSupplierLink = itemPrices[i].link;
+        minimumPrice = computedPrice;
+        this.cheapestSupplier = itemPrices[i].shop;
+        this.cheapestSupplierLink = itemPrices[i].link;
       }
     }
     return minimumPrice.toFixed(2);
+  }
+
+  private getPriceFactor(amount: number, unit: string) {
+    let factor: number = 1;
+    let converted_amount: number = 0;
+    switch (unit) {
+      case "kg":
+        converted_amount = amount * 1000;
+        factor = converted_amount / 100;
+        break;
+      case "hg":
+        converted_amount = amount * 100;
+        factor = converted_amount / 100;
+        break;
+      case "dag":
+        converted_amount = amount * 10;
+        factor = converted_amount / 100;
+        break;
+      case "g":
+        factor = amount / 100;
+        break;
+      case "dg":
+        converted_amount = amount * 0.1;
+        factor = converted_amount / 100;
+        break;
+      case "cg":
+        converted_amount = amount * 0.01;
+        factor = converted_amount / 100;
+        break;
+      case "mg":
+        converted_amount = amount * 0.001;
+        factor = converted_amount / 100;
+        break;
+      default:
+    }
+    return factor;
   }
 
 }

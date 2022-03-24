@@ -1,9 +1,66 @@
-<div *ngIf="chocolateItem">
-  <h2>{{chocolateItem.name | uppercase}} Details</h2>
-  <div><span>id: </span>{{chocolateItem.id}}</div>
-  <div>
-    <label for="hero-name">Hero name: </label>
-    <input id="hero-name" [(ngModel)]="chocolateItem.name" placeholder="Hero name"/>
+<div class="container" *ngIf="chocolateItem, else no_info_available_yet">
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <img src="assets/chocolate.jpg" class="card-img-top" alt="...">
+        <div class="card-body border-bottom">
+          <h4 class="card-title">{{chocolateItem.name | uppercase}}</h4>
+          <h6 class="card-text">{{ chocolateItem.brand }}</h6>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="container">
+        <ul class="list-group list-group-flush">
+          <div class="card-header">Nutritional Facts:</div>
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">Fat</div>
+              of which saturated: <span
+              class="badge bg-secondary rounded-pill">{{chocolateItem.nutrition.fat.saturated}}
+              g</span>
+            </div>
+            <span class="badge bg-secondary rounded-pill align-items-end">{{chocolateItem.nutrition.fat.total}} g</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">Carbohydrates</div>
+              of which sugar: <span
+              class="badge bg-secondary rounded-pill">{{chocolateItem.nutrition.carbohydrates.sugar}}
+              g</span>
+            </div>
+            <span
+              class="badge bg-secondary rounded-pill align-items-end">{{chocolateItem.nutrition.carbohydrates.total}}
+              g</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">Protein</div>
+            </div>
+            <span class="badge bg-secondary rounded-pill align-items-end">{{chocolateItem.nutrition.protein}} g</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">Salt</div>
+            </div>
+            <span class="badge bg-secondary rounded-pill align-items-end">{{chocolateItem.nutrition.salt}} g</span>
+          </li>
+        </ul>
+      </div>
+      <div class="container">
+        <div class=" card-header">Prices:</div>
+        <div class="row ms-2 me-auto border-bottom py-2" *ngFor="let price of chocolateItem.prices">
+          <div class="col-5 fw-bold">{{price.shop}}:</div>
+          <div class="col-5 text-end"> {{price.price}} ({{price.amount}} {{price.unit}})</div>
+          <div class="col-2"><a class="card-link" href="{{price.link}}">buy</a></div>
+        </div>
+      </div>
+    </div>
   </div>
-  <button type="button" (click)="goBack()">go back</button>
+  <button class="btn btn-link" type="button" (click)="goBack()">go back</button>
 </div>
+<ng-template #no_info_available_yet>
+  <div class="container">
+    <div class="alert alert-warning" style="width: 18rem;">Not information available yet.</div>
+  </div>
+</ng-template>
